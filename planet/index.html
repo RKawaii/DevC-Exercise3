@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Exercise 3</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body style="background-color:lightgray;">
+    <h1 style="margin-top: 1.5rem; margin-left:1rem;">Daftar Planet</h1>
+    <input type="text" placeholder="nama" id="cari" />
+    <button type="button" class="btn btn-secondary" onclick="filter()">
+      cari
+    </button>
+    <br />
+    <br />
+    <div class="shadow-lg">
+      <table id="demo" class="table table-striped table-dark"></table>
+    </div>
+    <br />
+  </body>
+  <script>
+    function showall() {
+      var xmlhttp = new XMLHttpRequest();
+
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var myobj = JSON.parse(this.responseText);
+          var planets = myobj.results;
+          var planet_table = '';
+          var i = 1;
+          for (planet of planets) {
+            console.log(planet.name, planet.rotation_period);
+            var terrains = planet.terrain;
+            terrains = terrains.split(',');
+            var terrainls = '<ul>';
+            for (terrain of terrains) {
+              terrainls += `<li>${terrain}</li>`;
+            }
+            terrainls += '</ul>';
+            planet_table += `<tr><td>${i}</td><td>${planet.name}</td><td>${
+              planet.rotation_period
+            }</td><td>${planet.diameter}KM</td><td>${planet.climate}</td><td>${
+              planet.gravity
+            }</td><td>${planet.population}</td><td>${terrainls}</td></tr>`;
+            i++;
+          }
+
+          document.getElementById('demo').innerHTML =
+            `<tr><th>#</th><th>name</th><th>rotation</th><th>diameter</th><th>climate</th><th>gravity</th><th>population</th><th>terrain</th></tr>` +
+            planet_table;
+        }
+      };
+
+      xmlhttp.open('GET', 'https://swapi.co/api/planets/', true);
+      xmlhttp.send();
+    }
+    showall();
+
+    function filter() {
+      var xmlhttp = new XMLHttpRequest();
+
+      xmlhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+          var myobj = JSON.parse(this.responseText);
+          var planets = myobj.results;
+          var planet_table = '';
+          var i = 1;
+          for (planet of planets) {
+            console.log(planet.name, planet.rotation_period);
+            if (planet.name === document.getElementById('cari').value) {
+              var terrains = planet.terrain;
+              terrains = terrains.split(',');
+              var terrainls = '<ul>';
+              for (terrain of terrains) {
+                terrainls += `<li>${terrain}</li>`;
+              }
+              terrainls += '</ul>';
+              planet_table += `<tr><td>${i}</td><td>${planet.name}</td><td>${
+                planet.rotation_period
+              }</td><td>${planet.diameter}KM</td><td>${
+                planet.climate
+              }</td><td>${planet.gravity}</td><td>${
+                planet.population
+              }</td><td>${terrainls}</td></tr>`;
+              i++;
+            }
+          }
+
+          document.getElementById('demo').innerHTML =
+            `<tr><th>#</th><th>name</th><th>rotation</th><th>diameter</th><th>climate</th><th>gravity</th><th>population</th><th>terrain</th></tr>` +
+            planet_table;
+        }
+      };
+
+      xmlhttp.open('GET', 'https://swapi.co/api/planets/', true);
+      xmlhttp.send();
+    }
+  </script>
+</html>
